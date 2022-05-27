@@ -1,0 +1,54 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: check-builtin-literals
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-executables-have-shebangs
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-toml
+    -   id: check-xml
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+    -   id: detect-private-key
+    -   id: end-of-file-fixer
+    -   id: fix-byte-order-marker
+    -   id: mixed-line-ending
+    -   id: no-commit-to-branch
+    -   id: pretty-format-json
+        args: [--autofix]
+    -   id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+-   repo: local
+    hooks:
+      - id: run-lint-script
+        name: Run ./scripts/lint
+        entry: ./scripts/lint.sh
+        language: system
+        always_run: true
+        pass_filenames: false
+        require_serial: true
+        stages: [push]
+      - id: run-test-script
+        name: Run ./scripts/test
+        entry: ./scripts/test.sh
+        language: system
+        always_run: true
+        pass_filenames: false
+        require_serial: true
+        stages: [push]
+      - id: commitizen
+        name: commitizen check commit message
+        entry: cz check --commit-msg-file
+        language: system
+        stages: [commit-msg]
+default_stages: [commit, push]
+exclude: (^\.cruft\.json$|^\.vscode\/.*)

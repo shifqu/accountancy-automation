@@ -1,0 +1,5 @@
+[flake8]
+max-line-length = 100
+extend-ignore =
+    E203  # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+    S101  # Allow assertions since we do not intend to compile to optimised byte code.

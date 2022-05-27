@@ -1,0 +1,23 @@
+{
+  "template": "https://github.com/shifqu/cookiecutter-python.git",
+  "commit": "6e218a96de93300f14c6ff9e713d088014328199",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "ida-py",
+      "package_slug": "ida_py",
+      "package_slug_kebab": "ida-py",
+      "project_description": "IDA (I Do Accountancy). A python project to automate tedious accountancy tasks.",
+      "project_version": "0.0.1",
+      "is_open_source": "y",
+      "include_contributing_docs": "y",
+      "ignore_poetry_lock_file": "n",
+      "full_name": "Sonny Valkeneers",
+      "email": "sonny@softllama.net",
+      "organization": "Softllama",
+      "github_username": "shifqu",
+      "_template": "https://github.com/shifqu/cookiecutter-python.git"
+    }
+  },
+  "directory": null
+}

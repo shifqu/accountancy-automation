@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "ida_py"
+version = "0.0.1"
+description = "IDA (I Do Accountancy). A python project to automate tedious accountancy tasks."
+authors = ["Sonny Valkeneers <sonny@softllama.net>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10.5"
+requests = "^2.28.1"
+psycopg = {extras = ["binary"], version = "^3.0.16"}
+
+[tool.poetry.dev-dependencies]
+bandit = "^1.7.4"
+black = "^22.6.0"
+commitizen = "^2.31.0"
+cruft = "^2.11.0"
+flake8-bugbear = "^22.7.1"
+flake8-pytest-style = "^1.6.0"
+isort = "^5.10.1"
+mypy = "^0.971"
+pep8-naming = "^0.13.1"
+pre-commit = "^2.20.0"
+pydocstyle = "^6.1.1"
+pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.8.2"
+safety = "^2.1.1"
+shellcheck-py = "^0.8.0"
+toml = "^0.10.2"
+types-freezegun = "^1.1.10"
+types-setuptools = "^64.0.1"
+types-toml = "^0.10.8"
+types-requests = "^2.28.8"
+
+[build-system]
+requires = ["poetry>=1.1.4"]
+build-backend = "poetry.masonry.api"
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+
+[tool.commitizen]
+annotated_tag = true
+bump_message = "bump: $current_version → $new_version [skip ci]"
+name = "cz_conventional_commits"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version = "0.0.1"
+version_files = [
+    "pyproject.toml:version",
+    "ida_py/__init__.py"
+]
+
+[tool.pydocstyle]
+convention = "numpy"
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover"]
+omit = ["*tests*"]
