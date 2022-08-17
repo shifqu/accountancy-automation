@@ -93,7 +93,7 @@ def set_webhook():
     https://core.telegram.org/bots/api#setwebhook
     """
     endpoint = BOT_CONFIG.endpoint + "setWebhook"
-    url = f"https://{BOT_CONFIG.domain_name}/{BOT_CONFIG.route_path_name}"
+    url = f"https://{BOT_CONFIG.domain_name}/{BOT_CONFIG.bot_route}"
     args = {"url": url, "secret_token": BOT_CONFIG.webhook_token}
     response = requests.post(endpoint, json=args)
     response_json = response.json()

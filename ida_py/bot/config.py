@@ -12,7 +12,7 @@ class BotConfig:
     chat_id: int
     domain_name: str
     endpoint: str
-    route_path_name: str
+    bot_route: str
     webhook_token: str
 
 
@@ -22,7 +22,7 @@ def bot_config() -> BotConfig:
         chat_id = int(os.environ["CHAT_ID"])
         domain_name = os.environ["DOMAIN_NAME"]
         endpoint = os.environ["ENDPOINT"]
-        route_path_name = os.environ["ROUTE_PATH_NAME"]
+        bot_route = os.environ["BOT_ROUTE"]
         webhook_token = os.environ["WEBHOOK_TOKEN"]
     except KeyError as exc:
         raise errors.ConfigurationError(f"Please export {exc} as an environment variable.")
@@ -34,6 +34,6 @@ def bot_config() -> BotConfig:
         chat_id=chat_id,
         domain_name=domain_name,
         endpoint=endpoint,
-        route_path_name=route_path_name,
+        bot_route=bot_route,
         webhook_token=webhook_token,
     )
