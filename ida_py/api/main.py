@@ -20,7 +20,7 @@ def ping(_: server.Request) -> server.JSONResponse:
     return server.JSONResponse({"ok": True, "ping": "pong!"})
 
 
-@app.route(f"/{API_CONFIG.route_path_name}")
+@app.route(API_CONFIG.bot_route)
 def telegram_webhook(request: server.Request) -> server.JSONResponse:
     """Run the telegram bot to register a response.
 

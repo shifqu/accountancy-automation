@@ -11,7 +11,7 @@ class APIConfig:
 
     host: str
     port: int
-    route_path_name: str
+    bot_route: str
 
 
 def api_config() -> APIConfig:
@@ -19,11 +19,11 @@ def api_config() -> APIConfig:
     try:
         host = os.environ["HOST"]
         port = int(os.environ["PORT"])
-        route_path_name = os.environ["ROUTE_PATH_NAME"]
+        bot_route = os.environ["BOT_ROUTE"]
     except KeyError as exc:
         raise errors.ConfigurationError(f"Please export {exc} as an environment variable.")
     except (TypeError, ValueError):
         received_value = os.environ["PORT"]
         raise errors.ConfigurationError(f"Could not cast PORT ({received_value}) to an int.")
 
-    return APIConfig(host, port, route_path_name)
+    return APIConfig(host, port, bot_route)
