@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+  nginx:
+    image: nginx:1.23.1
+    ports:
+      - 443:443
+    restart: unless-stopped
+    volumes:
+      - letsencrypt:/etc/letsencrypt/:ro
+      - ./docker/nginx/favicon.ico:/var/www/media/images/favicon.ico:ro
+      - ./docker/nginx/docker/wait_for_certificates.sh:/docker-entrypoint.d/99-wait-for-certificates.sh:ro
+      - ./docker/nginx/templates:/etc/nginx/templates:ro
+    environment:
+      - IDA_DOMAIN_NAME=${IDA_DOMAIN_NAME:?Please export IDA_DOMAIN_NAME as an environment variable}
+      - IDA_API_HOST=${IDA_API_HOST:-api}
+      - IDA_API_PORT=${IDA_API_PORT:-8080}
+    networks:
+      - idapy
+
+  certbot:
+    image: certbot/certbot:v1.29.0
+    # Run command: "--help security" or "--help all" to better understand the options used in the following command
+    command: "certonly --standalone -d ${IDA_DOMAIN_NAME:?Please export IDA_DOMAIN_NAME as an environment variable} --agree-tos --no-eff-email --email ${CERTBOT_EMAIL:?Please export CERTBOT_EMAIL as an environment variable} --key-type ecdsa --elliptic-curve secp256r1 --verbose --keep-until-expiring --preferred-challenges=http"
+    volumes:
+      - letsencrypt:/etc/letsencrypt/:rw
+    ports:
+      - 80:80
+
+  api:
+    build:
+      dockerfile: ./docker/ida-py/Dockerfile
+    restart: unless-stopped
+    environment:
+      - CHAT_ID=${TELEGRAM_CHAT_ID:?Please export TELEGRAM_CHAT_ID as an environment variable}
+      - ENDPOINT=${TELEGRAM_ENDPOINT:?Please export TELEGRAM_ENDPOINT as an environment variable}
+      - WEBHOOK_TOKEN=${TELEGRAM_WEBHOOK_TOKEN:?Please export TELEGRAM_WEBHOOK_TOKEN as an environment variable}
+      - ROUTE_PATH_NAME=${TELEGRAM_ROUTE_PATH_NAME:?Please export TELEGRAM_ROUTE_PATH_NAME as an environment variable}
+      - HOST=${API_HOST:-0.0.0.0}
+      - PORT=${API_PORT:-8080}
+      - DOMAIN_NAME=${IDA_DOMAIN_NAME:?Please export IDA_DOMAIN_NAME as an environment variable}
+    networks:
+      - idapy
+
+volumes:
+  letsencrypt:
+
+networks:
+  idapy:
