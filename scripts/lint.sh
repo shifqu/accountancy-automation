@@ -8,5 +8,5 @@ poetry run black --check ida_py/ tests/
 poetry run pydocstyle ida_py/ tests/
 poetry run flake8 ida_py/ tests/
 poetry run mypy ida_py/
-poetry run bandit -r ida_py/
+poetry run bandit -c pyproject.toml -r ida_py/
 poetry run safety check

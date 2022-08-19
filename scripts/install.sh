@@ -11,7 +11,7 @@ if poetry install; then
             echo 'fatal: could not update dependencies'
         fi
     else
-        echo 'fatal: coulld not upgrade pip'
+        echo 'fatal: could not upgrade pip'
     fi
     if poetry run pre-commit install -t pre-commit -t pre-push -t commit-msg; then
         echo 'successfully installed pre-commit hooks'
