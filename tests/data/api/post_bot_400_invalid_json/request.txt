@@ -1,0 +1,12 @@
+POST ${BOT_ROUTE} HTTP/1.1
+X-Real-IP: 91.108.6.85
+X-Forwarded-For: 91.108.6.85
+Host: ida.example.com
+X-Forwarded-Proto: https
+Connection: close
+Content-Length: 233
+X-Telegram-Bot-Api-Secret-Token: ${WEBHOOK_TOKEN}
+Content-Type: application/json
+Accept-Encoding: gzip, deflate
+
+{invalid_json: no_quotes}
