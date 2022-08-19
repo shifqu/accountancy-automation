@@ -10,10 +10,13 @@ from socket import SHUT_WR, socket
 from typing import Callable, NoReturn
 from urllib.parse import parse_qs, urlparse
 
+from ida_py.server.config import server_config
 from ida_py.server.errors import ApiException
 from ida_py.server.models import Request, Response
 
 Route = tuple[re.Pattern, Callable]
+
+SERVER_CONFIG = server_config()
 
 
 class ApplicationServer(socketserver.TCPServer):
@@ -33,7 +36,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
         """Handle the tcp request."""
         tcp_socket: socket = self.request
         request = tcp_socket.recv(4096).decode()
-        # self._write_to_file(request, "request")
+        self._write_to_file(request, "request")
         try:
             parsed_req = self._parse_request(request)
             response = self._get_route_function(parsed_req.path)(parsed_req)
@@ -67,7 +70,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
             f"\n"
             f"{body}"
         )
-        # self._write_to_file(response_str, "response")
+        self._write_to_file(response_str, "response")
         return response_str
 
     def _get_route_function(self, searched_path: str) -> Callable:
@@ -92,12 +95,15 @@ class TCPHandler(socketserver.BaseRequestHandler):
         url = urlparse(url_str)
         return Request(method, headers, url.path, parse_qs(url.query), body)
 
-    def _write_to_file(self, text: str, name: str) -> None:
+    @staticmethod
+    def _write_to_file(text: str, name: str) -> None:
+        if not SERVER_CONFIG.write_to_file:
+            return
         now_timestamp = int(datetime.now(tz=timezone.utc).timestamp())
-        parent_parent = Path(__file__).parent.parent
-        root = parent_parent / "tests" / "data" / "server" / str(now_timestamp)
-        root.mkdir(exist_ok=True, parents=True)
-        filepath = root / f"{name}.txt"
+        root = Path(__file__).parent.parent.parent
+        destination_dir = root / "tests" / "data" / "server" / str(now_timestamp)
+        destination_dir.mkdir(exist_ok=True, parents=True)
+        filepath = destination_dir / f"{name}.txt"
         filepath.write_text(text)
 
 
