@@ -1,5 +1,4 @@
 """Ida's HTTP server main functionality."""
-import json
 import re
 import signal
 import socketserver
@@ -8,11 +7,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from socket import SHUT_WR, socket
 from typing import Callable, NoReturn
-from urllib.parse import parse_qs, urlparse
 
 from ida_py.server.config import server_config
 from ida_py.server.errors import ApiException
-from ida_py.server.models import Request, Response
+from ida_py.server.utils import build_response, parse_request
 
 Route = tuple[re.Pattern, Callable]
 
@@ -35,18 +33,21 @@ class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         """Handle the tcp request."""
         tcp_socket: socket = self.request
-        request = tcp_socket.recv(4096).decode()
-        self._write_to_file(request, "request")
+        request_str = tcp_socket.recv(4096).decode()
+        self._write_to_file(request_str, "request")
         try:
-            parsed_req = self._parse_request(request)
-            response = self._get_route_function(parsed_req.path)(parsed_req)
+            request = parse_request(request_str)
+            route_function = self._get_route_function(request.path)
+            response = route_function(request)
         except ApiException as exc:
             response = exc
         except Exception:
             print(traceback.format_exc())
             response = ApiException({"ok": False}, 500)
-        response = self._build_response(response).encode()
-        tcp_socket.sendall(response)
+        response_str = build_response(response)
+        self._write_to_file(response_str, "response")
+        response_bytes = response_str.encode()
+        tcp_socket.sendall(response_bytes)
 
     def finish(self):
         """Try to shutdown the tcp_socket in a safe way."""
@@ -55,23 +56,6 @@ class TCPHandler(socketserver.BaseRequestHandler):
             tcp_socket.shutdown(SHUT_WR)
         except OSError:
             """Happens when the transport endpoint is not connected."""
-
-    def _build_response(self, response: Response) -> str:
-        headers = "\n".join(f"{key}: {value}" for key, value in response.headers.items())
-        if headers:
-            headers += "\n"  # Append a new-line in case additional headers are present.
-        body = response.body if isinstance(response.body, str) else json.dumps(response.body)
-        response_str = (
-            f"HTTP/1.1 {response.status_code}\n"
-            f"Content-Type: {response.content_type}; charset=utf-8\n"
-            f"Content-Length: {len(body)}\n"
-            "Connection: close\n"
-            f"{headers}"
-            f"\n"
-            f"{body}"
-        )
-        self._write_to_file(response_str, "response")
-        return response_str
 
     def _get_route_function(self, searched_path: str) -> Callable:
         """Get the route fuction for the searched_path.
@@ -109,22 +93,6 @@ class TCPHandler(socketserver.BaseRequestHandler):
             raise ApiException({"ok": False}, status_code=404)
         return route[1]
 
-    def _parse_request(self, request_str: str) -> Request:
-        request_lines = request_str.splitlines()
-        if not request_lines:
-            raise TypeError("Malformed request.")  # This is likely a connect attempt
-        method, url_str, _ = request_lines.pop(0).split(" ")
-        headers = {}
-        for index, line in enumerate(request_lines):
-            if line == "":  # under empty line, whole data is body
-                body = "".join(request_lines[index + 1 :])
-                break
-            key, value = (part.strip() for part in line.split(":", 1))
-            uppercase_key = key.upper()
-            headers[uppercase_key] = value
-        url = urlparse(url_str)
-        return Request(method, headers, url.path, parse_qs(url.query), body)
-
     @staticmethod
     def _write_to_file(text: str, name: str) -> None:
         if not SERVER_CONFIG.write_to_file:
@@ -147,7 +115,15 @@ class Application:
         signal.signal(signal.SIGTERM, self.shutdown)
 
     def route(self, path: str) -> Callable:
-        """Decorate the given function and listen on the given path once the server is started."""
+        """Register the given path as a route.
+
+        The decorated function is executed it once a request on the given path is received.
+
+        Parameters
+        ----------
+        path : str
+            The path to be added as a route.
+        """
 
         def _decorator(func: Callable):
             def _inner():
