@@ -74,10 +74,40 @@ class TCPHandler(socketserver.BaseRequestHandler):
         return response_str
 
     def _get_route_function(self, searched_path: str) -> Callable:
-        if not isinstance(self.server, ApplicationServer):
-            raise TypeError("This TCPHandler only supports ApplicationServer instances.")
+        """Get the route fuction for the searched_path.
 
-        return next(r for r in self.server.routes if r[0].match(searched_path))[1]
+        This function only works for ApplicationServer instances.
+        A default 404 is returned when no route matches searched_path.
+        If you would like to override the default 404, define a route with a wildcard route_path
+        e.g.::
+
+            @app.route("/.*")
+            def fallback_route(request):
+                raise ApiException({"ok": False, "error": "Custom 404!"}, status_code=404)
+
+        IMPORTANT: The routes are added by-occurrence, so make sure to define the wildcard
+        route_path as the last route, any routes added later will not be available.
+
+        Parameters
+        ----------
+        searched_path : str
+            The route that the user attempted to visit.
+
+        Returns
+        -------
+        Callable
+            The callable corresponding to the visited route.
+
+        Raises
+        ------
+        ApiException
+            In case no route was found.
+        """
+        assert isinstance(self.server, ApplicationServer), f"{type(self.server)} is not supported."
+        route = next((r for r in self.server.routes if r[0].match(searched_path)), None)
+        if route is None:
+            raise ApiException({"ok": False}, status_code=404)
+        return route[1]
 
     def _parse_request(self, request_str: str) -> Request:
         request_lines = request_str.splitlines()
