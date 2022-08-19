@@ -40,8 +40,8 @@ class TCPHandler(socketserver.BaseRequestHandler):
         try:
             parsed_req = self._parse_request(request)
             response = self._get_route_function(parsed_req.path)(parsed_req)
-        except ApiException as e:
-            response = e
+        except ApiException as exc:
+            response = exc
         except Exception:
             print(traceback.format_exc())
             response = ApiException({"ok": False}, 500)
@@ -104,7 +104,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
             In case no route was found.
         """
         assert isinstance(self.server, ApplicationServer), f"{type(self.server)} is not supported."
-        route = next((r for r in self.server.routes if r[0].match(searched_path)), None)
+        route = next((route for route in self.server.routes if route[0].match(searched_path)), None)
         if route is None:
             raise ApiException({"ok": False}, status_code=404)
         return route[1]
@@ -115,11 +115,11 @@ class TCPHandler(socketserver.BaseRequestHandler):
             raise TypeError("Malformed request.")  # This is likely a connect attempt
         method, url_str, _ = request_lines.pop(0).split(" ")
         headers = {}
-        for i, line in enumerate(request_lines):
+        for index, line in enumerate(request_lines):
             if line == "":  # under empty line, whole data is body
-                body = "".join(request_lines[i + 1 :])
+                body = "".join(request_lines[index + 1 :])
                 break
-            key, value = (x.strip() for x in line.split(":", 1))
+            key, value = (part.strip() for part in line.split(":", 1))
             uppercase_key = key.upper()
             headers[uppercase_key] = value
         url = urlparse(url_str)
