@@ -134,7 +134,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
         destination_dir = root / "tests" / "data" / "server" / str(now_timestamp)
         destination_dir.mkdir(exist_ok=True, parents=True)
         filepath = destination_dir / f"{name}.txt"
-        filepath.write_text(text)
+        filepath.write_text(text, newline="\n")
 
 
 class Application:
