@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+
+  api:
+    build:
+      target: development
+    volumes:
+      - ./:/opt/ida-py

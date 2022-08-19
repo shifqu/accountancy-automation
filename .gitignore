@@ -82,3 +82,6 @@ venv/
 docs/preconvert
 site/
 out
+
+# Ida specific
+ida_py/bot/last_message_id
