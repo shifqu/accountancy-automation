@@ -106,7 +106,7 @@ def _none_allowed(type_annotation: Any):
     if isinstance(type_annotation, UnionType) or get_origin(type_annotation) == Union:
         return NoneType in get_args(type_annotation)
 
-    raise Exception(f"Unexpected type {type_annotation}")
+    raise ValidationError(f"Unexpected type {type_annotation}")
 
 
 def _get_allowed_types(type_annotation: Any) -> tuple:
@@ -115,4 +115,4 @@ def _get_allowed_types(type_annotation: Any) -> tuple:
     if isinstance(type_annotation, UnionType) or get_origin(type_annotation) == Union:
         return get_args(type_annotation)
 
-    raise Exception(f"Unexpected type {type_annotation}")
+    raise ValidationError(f"Unexpected type {type_annotation}")
