@@ -7,6 +7,8 @@ from pytest_mock import MockerFixture
 from ida_py.errors import ConfigurationError
 from ida_py.server.config import ServerConfig, server_config
 from ida_py.server.main import Application, TCPHandler
+from ida_py.server.models import Response
+from ida_py.server.utils import _build_body_str
 
 
 def test_write_to_file(mocker: MockerFixture):
@@ -33,3 +35,10 @@ def test_shutdown():
     """Test that the shutdown method raises the expected exception."""
     with pytest.raises(KeyboardInterrupt):
         Application.shutdown()
+
+
+def test_build_body_str():
+    """Ensure that the response.body is returned if it's a string."""
+    dummy = "dummy"
+    response = Response(dummy)
+    assert _build_body_str(response) == dummy
