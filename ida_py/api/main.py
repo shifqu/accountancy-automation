@@ -59,20 +59,6 @@ def telegram_webhook(request: server.Request) -> server.JSONResponse:
     return server.JSONResponse({"ok": True})
 
 
-@app.route("/.*")
-def route_404(_: server.Request) -> server.JSONResponse:
-    """Return a 404.
-
-    This endpoint is a catch-all endpoint and should always be declared last.
-
-    Raises
-    ------
-    ApiException
-        An ApiException with a false "ok" flag and status-code 404.
-    """
-    raise server.ApiException({"ok": False}, status_code=404)
-
-
 def run():
     """Serve Ida' API."""
     app.serve(API_CONFIG.host, API_CONFIG.port)
