@@ -149,7 +149,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "commitizen"
-version = "2.31.0"
+version = "2.32.1"
 description = "Python commitizen client tool"
 category = "dev"
 optional = false
@@ -476,11 +476,11 @@ python-versions = ">=2.6"
 
 [[package]]
 name = "pep8-naming"
-version = "0.13.1"
+version = "0.13.2"
 description = "Check PEP-8 naming conventions, plugin for flake8"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [package.dependencies]
 flake8 = ">=3.9.1"
@@ -867,36 +867,9 @@ dev = ["pre-commit (>=2.17.0,<3.0.0)", "flake8 (>=3.8.3,<4.0.0)", "autoflake (>=
 all = ["rich (>=10.11.0,<13.0.0)", "shellingham (>=1.3.0,<2.0.0)", "colorama (>=0.4.3,<0.5.0)"]
 
 [[package]]
-name = "types-requests"
-version = "2.28.8"
-description = "Typing stubs for requests"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-types-urllib3 = "<1.27"
-
-[[package]]
-name = "types-setuptools"
-version = "64.0.1"
-description = "Typing stubs for setuptools"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "types-toml"
 version = "0.10.8"
 description = "Typing stubs for toml"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
-name = "types-urllib3"
-version = "1.26.22"
-description = "Typing stubs for urllib3"
 category = "dev"
 optional = false
 python-versions = "*"
@@ -958,7 +931,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10.5"
-content-hash = "df77c563a8382f44dadd6cada78db71881cc75cdffcf9284ae9d7c9796583d3a"
+content-hash = "ffb8ddfd02fd83a65da9da0f4d8b1de2c6cc7b860b722c546bccb64116d70013"
 
 [metadata.files]
 argcomplete = [
@@ -1034,8 +1007,8 @@ colorama = [
     {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 commitizen = [
-    {file = "commitizen-2.31.0-py3-none-any.whl", hash = "sha256:f0c1ddb5d45ccdbf2584844dbcf0c7fa68d21941de6b5206377bb6d418699e73"},
-    {file = "commitizen-2.31.0.tar.gz", hash = "sha256:a326874c88748d37e28ed75e2f01eb42e72de99c1d951ac20d8ddd94bd3762d4"},
+    {file = "commitizen-2.32.1-py3-none-any.whl", hash = "sha256:a513ec96e21b0b948f53a1fe4ab6e07454b40898dd4055354ba49f51b26bee97"},
+    {file = "commitizen-2.32.1.tar.gz", hash = "sha256:b825e72af25f69d5c52669e8bb7a17af90febdeefcca22089136ee61d0db4dc9"},
 ]
 cookiecutter = [
     {file = "cookiecutter-2.1.1-py2.py3-none-any.whl", hash = "sha256:9f3ab027cec4f70916e28f03470bdb41e637a3ad354b4d65c765d93aad160022"},
@@ -1253,8 +1226,8 @@ pbr = [
     {file = "pbr-5.10.0.tar.gz", hash = "sha256:cfcc4ff8e698256fc17ea3ff796478b050852585aa5bae79ecd05b2ab7b39b9a"},
 ]
 pep8-naming = [
-    {file = "pep8-naming-0.13.1.tar.gz", hash = "sha256:3af77cdaa9c7965f7c85a56cd579354553c9bbd3fdf3078a776f12db54dd6944"},
-    {file = "pep8_naming-0.13.1-py3-none-any.whl", hash = "sha256:f7867c1a464fe769be4f972ef7b79d6df1d9aff1b1f04ecf738d471963d3ab9c"},
+    {file = "pep8-naming-0.13.2.tar.gz", hash = "sha256:93eef62f525fd12a6f8c98f4dcc17fa70baae2f37fa1f73bec00e3e44392fa48"},
+    {file = "pep8_naming-0.13.2-py3-none-any.whl", hash = "sha256:59e29e55c478db69cffbe14ab24b5bd2cd615c0413edf790d47d3fb7ba9a4e23"},
 ]
 platformdirs = [
     {file = "platformdirs-2.5.2-py3-none-any.whl", hash = "sha256:027d8e83a2d7de06bbac4e5ef7e023c02b863d7ea5d079477e722bb41ab25788"},
@@ -1496,21 +1469,9 @@ typer = [
     {file = "typer-0.6.1-py3-none-any.whl", hash = "sha256:54b19e5df18654070a82f8c2aa1da456a4ac16a2a83e6dcd9f170e291c56338e"},
     {file = "typer-0.6.1.tar.gz", hash = "sha256:2d5720a5e63f73eaf31edaa15f6ab87f35f0690f8ca233017d7d23d743a91d73"},
 ]
-types-requests = [
-    {file = "types-requests-2.28.8.tar.gz", hash = "sha256:7a9f7b152d594a1c18dd4932cdd2596b8efbeedfd73caa4e4abb3755805b4685"},
-    {file = "types_requests-2.28.8-py3-none-any.whl", hash = "sha256:b0421f9f2d0dd0f8df2c75f974686517ca67473f05b466232d4c6384d765ad7a"},
-]
-types-setuptools = [
-    {file = "types-setuptools-64.0.1.tar.gz", hash = "sha256:8290b6bf1d916e6b007784d5cbcd112a1af9a2d76343231fcce0a55185343702"},
-    {file = "types_setuptools-64.0.1-py3-none-any.whl", hash = "sha256:005ccb8a1a7d0dce61cd63081dad0ddc599af4413bb49ce1333119a78a7bb2e1"},
-]
 types-toml = [
     {file = "types-toml-0.10.8.tar.gz", hash = "sha256:b7e7ea572308b1030dc86c3ba825c5210814c2825612ec679eb7814f8dd9295a"},
     {file = "types_toml-0.10.8-py3-none-any.whl", hash = "sha256:8300fd093e5829eb9c1fba69cee38130347d4b74ddf32d0a7df650ae55c2b599"},
-]
-types-urllib3 = [
-    {file = "types-urllib3-1.26.22.tar.gz", hash = "sha256:b05af90e73889e688094008a97ca95788db8bf3736e2776fd43fb6b171485d94"},
-    {file = "types_urllib3-1.26.22-py3-none-any.whl", hash = "sha256:09a8783e1002472e8d1e1f3792d4c5cca1fffebb9b48ee1512aae6d16fe186bc"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},
