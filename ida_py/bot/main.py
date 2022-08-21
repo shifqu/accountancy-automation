@@ -2,8 +2,7 @@
 from pathlib import Path
 from typing import Any
 
-import requests
-
+from ida_py import urlrequest
 from ida_py.bot.config import bot_config
 from ida_py.bot.errors import ExecutionError
 from ida_py.bot.models import Command, TelegramUpdate
@@ -73,7 +72,7 @@ def send_message(text: str) -> dict[str, Any]:
     }
     args = {"chat_id": BOT_CONFIG.chat_id, "text": text, "reply_markup": reply_markup}
     endpoint = BOT_CONFIG.endpoint + "sendMessage"
-    response = requests.post(endpoint, json=args)
+    response = urlrequest.post(endpoint, json=args)
     print("Sent message", text)
     response_json = response.json()
     message_id = response_json["result"]["message_id"]
@@ -95,9 +94,9 @@ def set_webhook():
     endpoint = BOT_CONFIG.endpoint + "setWebhook"
     url = f"https://{BOT_CONFIG.domain_name}{BOT_CONFIG.bot_route}"
     args = {"url": url, "secret_token": BOT_CONFIG.webhook_token}
-    response = requests.post(endpoint, json=args)
-    response_json = response.json()
-    if response_json["ok"] is False:
+    response = urlrequest.post(endpoint, json=args)
+    response_json: dict = response.json()
+    if not response_json.get("ok"):
         print(f"Something went wrong while setting the webhook. {response_json}")
         exit(1)
     return response_json

@@ -11,6 +11,7 @@ from ida_py.bot.config import bot_config
 from ida_py.bot.main import BOT_CONFIG, _register, send_message, set_webhook
 from ida_py.bot.models import Command
 from ida_py.errors import ConfigurationError
+from ida_py.urlrequest import Response
 from tests.utils import template_data
 
 ROOT_DIR = Path(__file__).parent / "data" / "bot"
@@ -76,23 +77,23 @@ def test_register():
 
 def test_set_webhook(mocker: MockerFixture):
     """Test the method `set_webhook` whilst mocking `requests.post`."""
-    post_patched = mocker.patch("ida_py.bot.main.requests.post")
+    post_patched = mocker.patch("ida_py.bot.main.urlrequest.post")
+    post_patched.return_value = Response(b'{"ok": true}', content_type="application/json")
 
-    json_return_value = {"ok": True}
-    post_patched.return_value.json.return_value = json_return_value
+    expected_json_return_value = {"ok": True}
     result = set_webhook()
-    assert result == json_return_value
+    assert result == expected_json_return_value
 
-    json_return_value = {"ok": False}
-    post_patched.return_value.json.return_value = json_return_value
+    post_patched.return_value = Response(b'{"ok": false}', content_type="application/json")
     with pytest.raises(SystemExit):
-        result = set_webhook()
+        set_webhook()
 
 
 def test_send_message(mocker: MockerFixture):
-    post_patched = mocker.patch("ida_py.bot.main.requests.post")
+    post_patched = mocker.patch("ida_py.bot.main.urlrequest.post")
     mocker.patch("ida_py.bot.main.Path.write_text")
-    json_return_value = {"ok": True, "result": {"message_id": 100}}
-    post_patched.return_value.json.return_value = json_return_value
+    response_body = b'{"ok": true, "result": {"message_id": 100}}'
+    post_patched.return_value = Response(response_body, content_type="application/json")
+    expected_json_return_value = {"ok": True, "result": {"message_id": 100}}
     result = send_message("dummy")
-    assert result == json_return_value
+    assert result == expected_json_return_value
