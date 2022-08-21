@@ -65,4 +65,9 @@ exclude_lines = ["pragma: no cover"]
 omit = ["*tests*"]
 
 [tool.bandit]
-skips = ["B101"]
+skips = [
+    "B101",  # Allow assertions since we do not intend to compile to optimised byte code.
+]
+
+[tool.mypy]
+show_error_codes = true
